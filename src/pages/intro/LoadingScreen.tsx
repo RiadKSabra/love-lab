@@ -7,7 +7,7 @@ export default function LoadingScreen() {
   const [step, setStep] = useState(0);
 
   useEffect(() => {
-    const timer1 = setTimeout(() => setStep(1), 1000); // ❤️ Initializing Love.exe
+    const timer1 = setTimeout(() => setStep(1), 1000); // ❤️ Initializing Love-lab.exe
     const timer2 = setTimeout(() => setStep(2), 2000); // Checking compatibility...
 
     // Fill progress bar
