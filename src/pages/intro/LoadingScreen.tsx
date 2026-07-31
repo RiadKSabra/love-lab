@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useAppStore } from '../../../store/useAppStore';
+import { useAppStore } from '../../store/useAppStore';
 
 export default function LoadingScreen() {
   const { setPhase } = useAppStore();
