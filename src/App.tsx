@@ -6,6 +6,7 @@ import Chapter2Question from './pages/Question/Chapter2Question';
 import Chapter3Success from './pages/Question/Chapter3Success';
 import Home from './pages/Home/Home';
 import DNABuilder from './pages/Games/DNABuilder';
+import SecretLetters from './pages/Letters/SecretLetters';
 
 export default function App() {
   const { phase, activeGameId } = useAppStore();
@@ -17,7 +18,13 @@ export default function App() {
       {phase === 'question' && <Chapter2Question />}
       {phase === 'success' && <Chapter3Success />}
       {phase === 'home' && (
-        activeGameId === 'dna-builder' ? <DNABuilder /> : <Home />
+        activeGameId === 'dna-builder' ? (
+          <DNABuilder />
+        ) : activeGameId === 'letters' ? (
+          <SecretLetters />
+        ) : (
+          <Home />
+        )
       )}
     </div>
   );

@@ -164,9 +164,7 @@ export default function Home() {
                 onClick={() => {
                   if (!door.locked) {
                     setSelectedDoor(door.id);
-                    if (door.id === 'dna-builder') {
-                      setActiveGame('dna-builder');
-                    }
+                    setActiveGame(door.id); // Fixed: Allows opening Secret Letters, Gallery, etc.
                   }
                 }}
                 className={`p-6 rounded-2xl bg-gradient-to-br ${door.color} border ${door.borderColor} backdrop-blur-md shadow-lg transition-all flex flex-col justify-between h-56 ${
