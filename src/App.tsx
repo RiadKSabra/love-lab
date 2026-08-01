@@ -7,6 +7,7 @@ import Chapter3Success from './pages/Question/Chapter3Success';
 import Home from './pages/Home/Home';
 import DNABuilder from './pages/Games/DNABuilder';
 import SecretLetters from './pages/Letters/SecretLetters';
+import Gallery from './pages/Memories/Gallery';
 
 export default function App() {
   const { phase, activeGameId } = useAppStore();
@@ -22,6 +23,8 @@ export default function App() {
           <DNABuilder />
         ) : activeGameId === 'letters' ? (
           <SecretLetters />
+        ) : activeGameId === 'memories' ? (
+          <Gallery />
         ) : (
           <Home />
         )
