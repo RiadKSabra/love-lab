@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAppStore } from '../../store/useAppStore';
+import AchievementModal from '../../components/AchievementModal';
 import {
   Dna,
   Camera,
@@ -9,7 +10,6 @@ import {
   Sparkles,
   Lock,
   Trophy,
-  Heart,
   Flower2,
   Atom,
 } from 'lucide-react';
@@ -54,7 +54,7 @@ const LAB_DOORS: LabDoor[] = [
     color: 'from-cyan-500/20 to-blue-500/20 text-cyan-400',
     borderColor: 'border-cyan-500/30 hover:border-cyan-500/60',
     locked: false,
-    description: 'Play Catch the Hearts, Memory Quiz, and Find Me.',
+    description: 'Play Catch the Hearts & Flowers.',
   },
   {
     id: 'letters',
@@ -81,10 +81,10 @@ const LAB_DOORS: LabDoor[] = [
     title: 'CLASSIFIED #99',
     category: 'VAULT',
     icon: Lock,
-    color: 'from-slate-800/40 to-slate-900/40 text-slate-500',
-    borderColor: 'border-slate-800',
+    color: 'from-purple-900/30 to-slate-900/40 text-purple-400',
+    borderColor: 'border-purple-500/40 hover:border-purple-500/80',
     locked: true,
-    description: 'Requires 100% achievement unlock rate to decrypt.',
+    description: 'Requires 100% achievement unlock rate to decrypt final proposal protocol.',
   },
 ];
 
@@ -92,6 +92,8 @@ export default function Home() {
   const { achievements, unlockAchievement, setActiveGame } = useAppStore();
   const [selectedDoor, setSelectedDoor] = useState<string | null>(null);
   const [flowerClicks, setFlowerClicks] = useState(0);
+  const [isAchievementModalOpen, setIsAchievementModalOpen] = useState(false);
+  const [showVaultAlert, setShowVaultAlert] = useState(false);
 
   const unlockedCount = Object.values(achievements).filter((a) => a.unlocked).length;
   const totalCount = Object.keys(achievements).length;
@@ -139,16 +141,19 @@ export default function Home() {
               )}
             </button>
 
-            {/* Achievement Badge */}
-            <div className="flex items-center gap-3 px-4 py-2 bg-slate-800/80 border border-slate-700/80 rounded-xl">
-              <Trophy className="w-5 h-5 text-yellow-400" />
+            {/* Achievement Badge Button (Opens Modal!) */}
+            <button
+              onClick={() => setIsAchievementModalOpen(true)}
+              className="flex items-center gap-3 px-4 py-2 bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700/80 rounded-xl transition-all cursor-pointer shadow-lg"
+            >
+              <Trophy className="w-5 h-5 text-yellow-400 animate-pulse" />
               <div className="text-left">
                 <p className="text-[10px] font-mono text-slate-400 uppercase">Achievements</p>
                 <p className="text-xs font-bold text-slate-200">
                   {unlockedCount} / {totalCount} Unlocked
                 </p>
               </div>
-            </div>
+            </button>
           </div>
         </header>
 
@@ -159,17 +164,17 @@ export default function Home() {
             return (
               <motion.div
                 key={door.id}
-                whileHover={{ scale: door.locked ? 1 : 1.02, y: door.locked ? 0 : -4 }}
-                whileTap={{ scale: door.locked ? 1 : 0.98 }}
+                whileHover={{ scale: 1.02, y: -4 }}
+                whileTap={{ scale: 0.98 }}
                 onClick={() => {
                   if (!door.locked) {
                     setSelectedDoor(door.id);
-                    setActiveGame(door.id); // Fixed: Allows opening Secret Letters, Gallery, etc.
+                    setActiveGame(door.id);
+                  } else {
+                    setShowVaultAlert(true);
                   }
                 }}
-                className={`p-6 rounded-2xl bg-gradient-to-br ${door.color} border ${door.borderColor} backdrop-blur-md shadow-lg transition-all flex flex-col justify-between h-56 ${
-                  door.locked ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'
-                }`}
+                className={`p-6 rounded-2xl bg-gradient-to-br ${door.color} border ${door.borderColor} backdrop-blur-md shadow-lg transition-all flex flex-col justify-between h-56 cursor-pointer`}
               >
                 <div>
                   <div className="flex items-center justify-between mb-4">
@@ -186,7 +191,9 @@ export default function Home() {
 
                 <div className="pt-4 border-t border-white/10 flex items-center justify-between text-xs font-medium">
                   {door.locked ? (
-                    <span className="text-slate-500 font-mono">🔒 Locked Vault</span>
+                    <span className="text-purple-300 font-mono flex items-center gap-1">
+                      🔒 Classified Vault (Locked)
+                    </span>
                   ) : (
                     <span className="text-white/90 hover:underline flex items-center gap-1">
                       Access Chamber &rarr;
@@ -204,6 +211,41 @@ export default function Home() {
         </footer>
 
       </div>
+
+      {/* Achievement List Popup Modal */}
+      <AchievementModal
+        isOpen={isAchievementModalOpen}
+        onClose={() => setIsAchievementModalOpen(false)}
+      />
+
+      {/* Locked Vault Warning Alert */}
+      <AnimatePresence>
+        {showVaultAlert && (
+          <div className="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 z-50">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              className="max-w-md w-full bg-slate-900 border border-purple-500/40 rounded-3xl p-6 text-center space-y-4 shadow-2xl"
+            >
+              <div className="p-3 bg-purple-500/10 text-purple-400 rounded-full w-12 h-12 mx-auto flex items-center justify-center border border-purple-500/20">
+                <Lock className="w-6 h-6 animate-pulse" />
+              </div>
+              <h2 className="text-xl font-black text-white">Vault #99 Encrypted</h2>
+              <p className="text-xs text-slate-300 leading-relaxed font-mono">
+                &ldquo;Master Access Token missing. Complete all laboratory experiments & decrypt the hidden secret badge to unlock this vault.&rdquo;
+              </p>
+              <button
+                onClick={() => setShowVaultAlert(false)}
+                className="w-full py-2.5 bg-purple-600 hover:bg-purple-700 text-white text-xs font-mono font-bold rounded-xl transition-all cursor-pointer"
+              >
+                Return to Experiments
+              </button>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
     </div>
   );
 }

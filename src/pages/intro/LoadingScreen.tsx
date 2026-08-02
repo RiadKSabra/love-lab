@@ -42,7 +42,7 @@ export default function LoadingScreen() {
     <div className="flex flex-col items-center justify-center min-h-screen bg-black text-green-400 font-mono p-6">
       <div className="w-full max-w-md space-y-4 text-left">
         {step >= 0 && <p className="animate-pulse">Loading...</p>}
-        {step >= 1 && <p className="text-pink-400">❤️ Initializing Love.exe</p>}
+        {step >= 1 && <p className="text-pink-400">❤️ Initializing Love-lab.exe</p>}
         {step >= 2 && (
           <div>
             <p>Checking compatibility...</p>

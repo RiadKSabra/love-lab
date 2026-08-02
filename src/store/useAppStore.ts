@@ -18,7 +18,7 @@ interface AppStore {
 }
 
 export const useAppStore = create<AppStore>((set) => ({
-  phase: 'home', // Current view
+  phase: 'loading',
   activeGameId: null,
   achievements: {
     dna_fixed: {
