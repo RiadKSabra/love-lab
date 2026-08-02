@@ -8,6 +8,8 @@ import Home from './pages/Home/Home';
 import DNABuilder from './pages/Games/DNABuilder';
 import SecretLetters from './pages/Letters/SecretLetters';
 import Gallery from './pages/Memories/Gallery';
+import StarObservatory from './pages/Observatory/StarObservatory';
+import ArcadeSuite from './pages/Games/ArcadeSuite';
 
 export default function App() {
   const { phase, activeGameId } = useAppStore();
@@ -25,6 +27,10 @@ export default function App() {
           <SecretLetters />
         ) : activeGameId === 'memories' ? (
           <Gallery />
+        ) : activeGameId === 'stars' ? (
+          <StarObservatory />
+        ) : activeGameId === 'games' ? (
+          <ArcadeSuite />
         ) : (
           <Home />
         )

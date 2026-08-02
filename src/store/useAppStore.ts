@@ -1,67 +1,67 @@
 import { create } from 'zustand';
 
-export type AppPhase = 'loading' | 'intro' | 'question' | 'success' | 'home' | 'minigame';
-
 export interface Achievement {
   id: string;
   title: string;
   description: string;
   unlocked: boolean;
+  secret?: boolean;
 }
 
 interface AppStore {
-  // Phase & Navigation
-  phase: AppPhase;
+  phase: 'loading' | 'intro' | 'question' | 'success' | 'home';
   activeGameId: string | null;
-  setPhase: (phase: AppPhase) => void;
-  setActiveGame: (gameId: string | null) => void;
-
-  // Sound State
-  isPlayingMusic: boolean;
-  setIsPlayingMusic: (playing: boolean) => void;
-
-  // Achievements State
   achievements: Record<string, Achievement>;
+  setPhase: (phase: 'loading' | 'intro' | 'question' | 'success' | 'home') => void;
+  setActiveGame: (gameId: string | null) => void;
   unlockAchievement: (id: string) => void;
-  noButtonAttempts: number;
-  incrementNoAttempts: () => void;
 }
 
 export const useAppStore = create<AppStore>((set) => ({
-  phase: 'loading',
+  phase: 'home', // Current view
   activeGameId: null,
-  setPhase: (phase) => set({ phase }),
-  setActiveGame: (activeGameId) => set({ activeGameId }),
-
-  isPlayingMusic: false,
-  setIsPlayingMusic: (isPlayingMusic) => set({ isPlayingMusic }),
-
-  noButtonAttempts: 0,
-  incrementNoAttempts: () =>
-    set((state) => {
-      const nextCount = state.noButtonAttempts + 1;
-      if (nextCount >= 20 && state.achievements['no_20'] && !state.achievements['no_20'].unlocked) {
-        // Automatically unlock achievement on 20 attempts
-        return {
-          noButtonAttempts: nextCount,
-          achievements: {
-            ...state.achievements,
-            no_20: { ...state.achievements['no_20'], unlocked: true },
-          },
-        };
-      }
-      return { noButtonAttempts: nextCount };
-    }),
-
   achievements: {
-    flower_clicker: { id: 'flower_clicker', title: 'Botanist', description: 'Clicked every flower', unlocked: false },
-    no_20: { id: 'no_20', title: 'Persistent', description: 'Tried clicking No 20 times', unlocked: false },
-    time_10m: { id: 'time_10m', title: 'Lab Assistant', description: 'Stayed in the lab for 10 minutes', unlocked: false },
-    hidden_heart: { id: 'hidden_heart', title: 'Eagle Eye', description: 'Found the hidden heart', unlocked: false },
-    read_all_letters: { id: 'read_all_letters', title: 'Hopeless Romantic', description: 'Read every letter', unlocked: false },
-    beat_all_games: { id: 'beat_all_games', title: 'Master Chemist', description: 'Beat every mini-game', unlocked: false },
+    dna_fixed: {
+      id: 'dna_fixed',
+      title: 'Genetic Match',
+      description: 'Stabilized relationship DNA mechanics.',
+      unlocked: true,
+    },
+    read_all_letters: {
+      id: 'read_all_letters',
+      title: 'Hopeless Romantic',
+      description: 'Decrypted all classified lab love letters.',
+      unlocked: false,
+    },
+    stargazer: {
+      id: 'stargazer',
+      title: 'Stargazer',
+      description: 'Mapped all 3 constellations in the night sky.',
+      unlocked: false,
+    },
+    flower_clicker: {
+      id: 'flower_clicker',
+      title: 'Botanical Curiosity',
+      description: 'Discovered the hidden flora Easter Egg in the lab.',
+      unlocked: false,
+    },
+    beat_all_games: {
+      id: 'beat_all_games',
+      title: 'Lab Calibrator',
+      description: 'Scored 15 points in the Arcade Suite.',
+      unlocked: false,
+    },
+    secret_proposal: {
+      id: 'secret_proposal',
+      title: '??? Classified Master Key',
+      description: 'Decrypt the heart\'s ultimate frequency to unlock Vault #99.',
+      unlocked: false,
+      secret: true,
+    },
   },
 
+  setPhase: (phase) => set({ phase }),
+  setActiveGame: (activeGameId) => set({ activeGameId }),
   unlockAchievement: (id) =>
     set((state) => ({
       achievements: {
